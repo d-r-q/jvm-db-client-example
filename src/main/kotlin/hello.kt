@@ -21,7 +21,7 @@ fun main(args: Array<String>) {
 
     connection.use { conn ->
         val stmt = conn.prepareStatement("SELECT count(*) cnt FROM test_table WHERE test_id < ?")
-        val id = 20
+        val id = 10
         stmt.setInt(1, id)
         val resultSet = stmt.executeQuery()
 
