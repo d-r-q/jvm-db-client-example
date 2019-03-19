@@ -12,6 +12,7 @@ repositories {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation 'org.postgresql:postgresql:42.2.5.jre7'
+    implementation 'org.flywaydb:flyway-core:5.2.4'
 }
 
 compileKotlin {

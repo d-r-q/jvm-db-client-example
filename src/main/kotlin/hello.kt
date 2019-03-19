@@ -1,5 +1,6 @@
 import org.postgresql.Driver
 import java.sql.DriverManager
+import org.flywaydb.core.Flyway
 
 fun main(args: Array<String>) {
     DriverManager.registerDriver(Driver())
@@ -8,6 +9,16 @@ fun main(args: Array<String>) {
         "postgres",
         "mysecretpassword"
     )
+
+    val flyway = Flyway
+        .configure()
+        .dataSource("jdbc:postgresql://localhost:5432/postgres", "postgres",
+            "mysecretpassword")
+        .load()
+
+    // Start the migration
+    flyway.migrate()
+
     connection.use { conn ->
         val stmt = conn.createStatement()
         val resultSet = stmt
