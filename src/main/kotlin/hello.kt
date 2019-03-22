@@ -2,6 +2,7 @@ import org.postgresql.Driver
 import java.sql.DriverManager
 import org.flywaydb.core.Flyway
 import java.sql.SQLType
+import java.sql.Statement
 import java.sql.Types
 
 fun main(args: Array<String>) {
@@ -40,6 +41,15 @@ fun main(args: Array<String>) {
         calStmt.registerOutParameter(1, Types.INTEGER)
         calStmt.execute()
         println(calStmt.getInt(1))
+
+        val insStmt = conn.prepareStatement(
+            "INSERT INTO test_table (data) VALUES ('Code')",
+            Statement.RETURN_GENERATED_KEYS
+        )
+        insStmt.executeUpdate()
+        val generatedKeys = insStmt.generatedKeys
+        generatedKeys.next()
+        println(generatedKeys.getInt(1))
     }
 }
 
