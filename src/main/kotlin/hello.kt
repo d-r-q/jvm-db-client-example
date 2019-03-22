@@ -1,6 +1,8 @@
 import org.postgresql.Driver
 import java.sql.DriverManager
 import org.flywaydb.core.Flyway
+import java.sql.SQLType
+import java.sql.Types
 
 fun main(args: Array<String>) {
     DriverManager.registerDriver(Driver())
@@ -12,8 +14,10 @@ fun main(args: Array<String>) {
 
     val flyway = Flyway
         .configure()
-        .dataSource("jdbc:postgresql://localhost:5432/postgres", "postgres",
-            "mysecretpassword")
+        .dataSource(
+            "jdbc:postgresql://localhost:5432/postgres", "postgres",
+            "mysecretpassword"
+        )
         .load()
 
     // Start the migration
@@ -30,5 +34,26 @@ fun main(args: Array<String>) {
             val cnt = resultSet.getInt("cnt")
             println("Count: $cnt")
         }
+
+        val calStmt = conn.prepareCall("{ ? = call increment(?) } ")
+        calStmt.setInt(2, 2)
+        calStmt.registerOutParameter(1, Types.INTEGER)
+        calStmt.execute()
+        println(calStmt.getInt(1))
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
