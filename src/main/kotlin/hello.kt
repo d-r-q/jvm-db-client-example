@@ -50,6 +50,11 @@ fun main(args: Array<String>) {
         val generatedKeys = insStmt.generatedKeys
         generatedKeys.next()
         println(generatedKeys.getInt(1))
+
+        val updStmt = conn.prepareStatement("UPDATE test_table SET test_id = test_id + 0")
+        val updated = updStmt.executeUpdate()
+
+        println(updated)
     }
 }
 
