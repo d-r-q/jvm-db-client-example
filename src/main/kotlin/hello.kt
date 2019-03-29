@@ -55,6 +55,21 @@ fun main(args: Array<String>) {
         val updated = updStmt.executeUpdate()
 
         println(updated)
+
+        conn.autoCommit = false
+
+        val deleted = conn.prepareStatement("DELETE FROM test_table where test_id < 10").executeUpdate()
+        val sp = conn.setSavepoint("delete")
+        conn.prepareStatement("DELETE FROM test_table where test_id < 20").executeUpdate()
+        println("Deleted: $deleted")
+        val rsBefore = conn.prepareStatement("SELECT count(*) FROM test_table").executeQuery()
+        rsBefore.next()
+        println("Count before rollback: ${rsBefore.getInt(1)}")
+
+        conn.rollback(sp)
+        val rsAfter = conn.prepareStatement("SELECT count(*) FROM test_table").executeQuery()
+        rsAfter.next()
+        println("Count after rollback: ${rsAfter.getInt(1)}")
     }
 }
 
