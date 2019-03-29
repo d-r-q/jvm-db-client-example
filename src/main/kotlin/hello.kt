@@ -23,6 +23,17 @@ fun main(args: Array<String>) {
 
     connection.use { conn ->
         println(selectPage(conn, Page(10, 3)))
+
+        var from: Pair<String, Int>? = null
+        for (i in 0..10){
+            val res = selectPage2(conn, Page2(from, 6))
+            if (res.isEmpty()) {
+                break
+            }
+            print("Page $i: ")
+            println(res)
+            from = res.last()
+        }
     }
 
 }
@@ -42,8 +53,33 @@ fun selectPage(con: Connection, page: Page): List<Int> {
     return res
 }
 
-data class Page(val num: Int, val size: Int)
+fun selectPage2(con: Connection, page: Page2): ArrayList<Pair<String, Int>> {
+    var query = "select data, test_id from test_table "
+    if (page.from != null) {
+        query += "where (data, test_id) > (?, ?)"
+    }
+    query += "order by data, test_id limit ?"
 
+    val stmt = con.prepareStatement(query)
+    if (page.from != null) {
+        stmt.setString(1, page.from.first)
+        stmt.setInt(2, page.from.second)
+        stmt.setInt(3, page.size)
+    } else {
+        stmt.setInt(1, page.size)
+    }
+
+    val rs = stmt.executeQuery()
+    val res = ArrayList<Pair<String, Int>>()
+    while (rs.next()) {
+        res.add(rs.getString(1) to rs.getInt(2))
+    }
+    return res
+
+}
+
+data class Page(val num: Int, val size: Int)
+data class Page2(val from: Pair<String, Int>?, val size: Int)
 
 
 
