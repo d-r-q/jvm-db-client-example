@@ -12,7 +12,8 @@ fun main() {
     // > ok
     // exit
     val db = Db()
-    val controller = Controller(Service(StudentDao(db.dataSource)))
+    val groupDao = GroupDao(db.dataSource)
+    val controller = Controller(Service(StudentDao(db.dataSource), groupDao))
     generateSequence { print("> "); readLine() }
         .takeWhile { it != "exit" }
         .map {
