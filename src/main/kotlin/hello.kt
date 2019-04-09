@@ -54,11 +54,11 @@ fun selectPage(con: Connection, page: Page): List<Int> {
 }
 
 fun selectPage2(con: Connection, page: Page2): ArrayList<Pair<String, Int>> {
-    var query = "select data, test_id from test_table "
+    var query = "select case when data is null then '' else data end nnd, test_id from test_table "
     if (page.from != null) {
-        query += "where (data, test_id) > (?, ?)"
+        query += "where (case when data is null then '' else data end, test_id) > (?, ?)"
     }
-    query += "order by data, test_id limit ?"
+    query += "order by nnd, test_id limit ?"
 
     val stmt = con.prepareStatement(query)
     if (page.from != null) {
