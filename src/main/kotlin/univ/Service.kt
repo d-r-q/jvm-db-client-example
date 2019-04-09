@@ -1,14 +1,39 @@
 package univ
 
+import java.lang.Exception
+import java.lang.RuntimeException
+import javax.sql.DataSource
 
-class Service(private val studentDao: StudentDao, private val groupDao: GroupDao) {
+
+class Service(val dataSource: DataSource) {
 
     fun createStudent(toCreate: Student): Long {
-        return studentDao.createStudent(toCreate)
+        return dataSource.connection.use {
+            it.autoCommit = false
+            try {
+                val studentId = createStudent(it, toCreate)
+                if (Math.random() < 0.5) throw RuntimeException("")
+                addStudents(it, toCreate.group, 1)
+                it.commit()
+                studentId
+            } catch (e: Exception) {
+                it.rollback()
+                throw e
+            }
+        }
     }
 
     fun getGroupByNumber(groupNumber: String): Group? {
-        return groupDao.getGroupByNumber(groupNumber)
+        return dataSource.connection.use {
+            getGroupByNumber(it, groupNumber)
+        }
+
+    }
+
+    fun createGroup(group: Group): Long {
+        return dataSource.connection.use {
+            createGroup(it, group)
+        }
     }
 
 }

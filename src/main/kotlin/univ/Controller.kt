@@ -15,11 +15,17 @@ class Controller(private val service: Service) {
         return service.createStudent(toCreate).toString()
     }
 
-/*    fun createGroup(args: String): String {
+    fun createGroup(argsStr: String): String {
+        val args = argsStr.split(",")
+            .map { it.trim() }
+        if (argsStr.isEmpty() || args.size != 1) {
+            return "1 arg expected"
+        }
 
+        val toCreate = Group(null, args[0])
+        return service.createGroup(toCreate).toString()
     }
 
-    fun moveStudent(args: String): String {
+    fun moveStudent(args: String): String = TODO()
 
-    }*/
 }
