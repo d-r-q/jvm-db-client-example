@@ -8,7 +8,7 @@ class Service(private val studentDao: StudentDao, private val groupDao: GroupDao
     }
 
     fun getGroupByNumber(groupNumber: String): Group? {
-        return groupDao.getGroupByNumer(groupNumber)
+        return groupDao.getGroupByNumber(groupNumber)
     }
 
 }

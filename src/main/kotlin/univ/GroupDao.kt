@@ -5,7 +5,7 @@ import javax.sql.DataSource
 
 class GroupDao(private val dataSource: DataSource) {
 
-    fun getGroupByNumer(groupNumber: String): Group? {
+    fun getGroupByNumber(groupNumber: String): Group? {
         return dataSource.connection.use {
             val stmt = it.prepareStatement("SELECT * FROM groups WHERE number = ?")
             stmt.setString(1, groupNumber)

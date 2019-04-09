@@ -13,6 +13,4 @@ VALUES (0, 'Default');
 ALTER TABLE "students"
   ADD COLUMN student_group bigint NOT NULL REFERENCES groups(id) DEFAULT 0;
 
-UPDATE students SET "student_group" = 0;
-
 ALTER TABLE "students" ALTER COLUMN "student_group" DROP DEFAULT;
