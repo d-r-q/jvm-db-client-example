@@ -10,9 +10,25 @@ class Service(
     fun createStudent(toCreate: Student): Long {
         return transaction(dataSource) {
             val studentId = studentDao.createStudent(toCreate)
-            if (Math.random() < 0.5) throw RuntimeException("")
-            groupDao.addStudents(toCreate.group, 1)
+            groupDao.addStudents(toCreate.group.id!!, 1)
             studentId
+        }
+    }
+
+    fun createStudents(toCreate: Iterable<Student>): List<Long> {
+        return transaction(dataSource) {
+
+            val studentIds = studentDao.createStudents(toCreate)
+
+            val counts = toCreate.groupBy { it.group.id }
+                .map { it.key to it.value.size }
+
+            for ((group, cnt) in counts) {
+                if (group != null) {
+                    groupDao.addStudents(group, cnt)
+                }
+            }
+            studentIds
         }
     }
 
@@ -40,8 +56,8 @@ class Service(
             val srcGroup = toMove.group
             toMove.group = targetGroup
             studentDao.updateStudent(toMove)
-            groupDao.addStudents(srcGroup, -1)
-            groupDao.addStudents(targetGroup, 1)
+            groupDao.addStudents(srcGroup.id!!, -1)
+            groupDao.addStudents(targetGroup.id!!, 1)
         }
     }
 

@@ -15,6 +15,18 @@ class Controller(private val service: Service) {
         return service.createStudent(toCreate).toString()
     }
 
+    fun createStudents(argsStr: String): String {
+        val args = argsStr.split(",")
+            .map { it.trim() }
+        if (argsStr.isEmpty() || args.size % 2 == 0) {
+            return "even args expected"
+        }
+
+        val group = service.getGroupByNumber(args[1]) ?: return "Group with number ${args[1]} not found"
+        val toCreate = Student(null, args[0], group)
+        return service.createStudent(toCreate).toString()
+    }
+
     fun createGroup(argsStr: String): String {
         val args = argsStr.split(",")
             .map { it.trim() }

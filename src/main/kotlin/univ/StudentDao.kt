@@ -20,6 +20,28 @@ class StudentDao(private val dataSource: DataSource) {
         return gk.getLong(1)
     }
 
+    fun createStudents(toCreate: Iterable<Student>): List<Long> {
+        val stmt = dataSource.connection.prepareStatement(
+            "INSERT INTO students (full_name, student_group) VALUES (?, ?)",
+            Statement.RETURN_GENERATED_KEYS
+
+        )
+        for (student in toCreate) {
+            stmt.setString(1, student.name)
+            stmt.setLong(2, student.group.id!!)
+            stmt.addBatch()
+        }
+
+        stmt.executeUpdate()
+        val gk = stmt.generatedKeys
+        val res = ArrayList<Long>()
+        while (gk.next()) {
+            res += gk.getLong(1)
+        }
+
+        return res
+    }
+
     fun findStudent(id: Long): Student? {
         val stmt = dataSource.connection.prepareStatement(
             "SELECT " +

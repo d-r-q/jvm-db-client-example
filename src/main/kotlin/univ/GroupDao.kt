@@ -29,12 +29,12 @@ class GroupDao(private val dataSource: DataSource) {
         return gk.getLong(1)
     }
 
-    fun addStudents(group: Group, newStudents: Int) {
+    fun addStudents(groupId: Long, newStudents: Int) {
         val stmt = dataSource.connection.prepareStatement(
             "UPDATE groups SET students_count = students_count + ? WHERE id = ?"
         )
         stmt.setInt(1, newStudents)
-        stmt.setLong(2, group.id!!)
+        stmt.setLong(2, groupId)
         stmt.executeUpdate()
     }
 }
