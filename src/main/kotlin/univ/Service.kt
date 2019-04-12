@@ -36,4 +36,27 @@ class Service(val dataSource: DataSource) {
         }
     }
 
+    fun findStudent(id: Long): Student? {
+        return dataSource.connection.use {
+            findStudent(it, id)
+        }
+    }
+
+    fun move(toMove: Student, targetGroup: Group) {
+        return dataSource.connection.use {
+            it.autoCommit = false
+            try {
+                val srcGroup = toMove.group
+                toMove.group = targetGroup
+                updateStudent(it, toMove)
+                addStudents(it, srcGroup, -1)
+                addStudents(it, targetGroup, 1)
+                it.commit()
+            } catch (e: Exception) {
+                it.rollback()
+                throw e
+            }
+        }
+    }
+
 }

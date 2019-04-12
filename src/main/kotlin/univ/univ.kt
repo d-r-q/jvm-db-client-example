@@ -26,7 +26,7 @@ fun main() {
                         "Unknown command"
                     }
                 } else if (it.startsWith("move")) {
-                    "Move"
+                    controller.moveStudent(it.substring("move".length).trim())
                 } else {
                     "Unknown command: $it"
                 }
