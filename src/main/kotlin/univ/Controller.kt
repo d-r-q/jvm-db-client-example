@@ -66,7 +66,7 @@ class Controller(private val service: Service) {
 
         val from = args[0].toInt()
         val size = args[1].toInt()
-        return service.getStudents(Page(from, size)).joinToString("\n")
+        return service.getStudents(Page(from, size)).map { "${it.name} ${it.group.number}" } .joinToString("\n")
     }
 
 }

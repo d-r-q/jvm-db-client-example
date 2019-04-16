@@ -1,6 +1,5 @@
 package univ
 
-import org.intellij.lang.annotations.Language
 import java.sql.Statement
 import javax.sql.DataSource
 

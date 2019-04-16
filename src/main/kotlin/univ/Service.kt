@@ -63,7 +63,9 @@ class Service(
 
     fun getStudents(page: Page): List<Student> {
         return transaction(dataSource) {
-            studentDao.getStudents(page)
+            val res = studentDao.getStudents(page)
+            res.map { it.group.number }.forEach({})
+            res
         }
     }
 }
