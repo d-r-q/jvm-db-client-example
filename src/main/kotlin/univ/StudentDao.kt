@@ -32,7 +32,7 @@ class StudentDao(private val dataSource: DataSource) {
             stmt.addBatch()
         }
 
-        stmt.executeUpdate()
+        stmt.executeBatch()
         val gk = stmt.generatedKeys
         val res = ArrayList<Long>()
         while (gk.next()) {

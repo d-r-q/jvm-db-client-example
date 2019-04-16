@@ -21,7 +21,9 @@ fun main() {
         .map {
             try {
                 if (it.startsWith("create")) {
-                    if (it.contains("student")) {
+                    if (it.contains("students")) {
+                        controller.createStudents(it.substring("create students".length).trim())
+                    } else if (it.contains("student")) {
                         controller.createStudent(it.substring("create student".length).trim())
                     } else if (it.contains("group")) {
                         controller.createGroup(it.substring("create group".length).trim())
