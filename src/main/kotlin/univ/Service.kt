@@ -61,6 +61,11 @@ class Service(
         }
     }
 
+    fun getStudents(page: Page): List<Student> {
+        return transaction(dataSource) {
+            studentDao.getStudents(page)
+        }
+    }
 }
 
 fun <T> transaction(ds: UnivDataSource, body: () -> T): T {

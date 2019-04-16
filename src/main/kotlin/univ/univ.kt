@@ -32,11 +32,18 @@ fun main() {
                     }
                 } else if (it.startsWith("move")) {
                     controller.moveStudent(it.substring("move".length).trim())
+                } else if (it.startsWith("get")) {
+                    if (it.contains("students")) {
+                        controller.getStudents(it.substring("get students".length).trim())
+                    } else {
+                        "Unknown command: $it"
+                    }
                 } else {
                     "Unknown command: $it"
                 }
             } catch (e: Exception) {
                 println("Error has been occured: $e")
+                e.printStackTrace()
             }
         }.forEach { println(it) }
 }

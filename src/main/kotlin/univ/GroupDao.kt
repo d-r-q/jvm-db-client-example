@@ -10,7 +10,7 @@ class GroupDao(private val dataSource: DataSource) {
         stmt.setString(1, groupNumber)
         val rs = stmt.executeQuery()
         return if (rs.next()) {
-            return Group(rs.getLong("id"), rs.getString("number"), rs.getInt("students_count"))
+            return ActualGroup(rs.getLong("id"), rs.getString("number"), rs.getInt("students_count"))
         } else {
             null
         }

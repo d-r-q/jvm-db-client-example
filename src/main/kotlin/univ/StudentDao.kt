@@ -1,8 +1,10 @@
 package univ
 
+import org.intellij.lang.annotations.Language
 import java.sql.Statement
 import javax.sql.DataSource
 
+data class Page(val num: Int, val size: Int)
 
 class StudentDao(private val dataSource: DataSource) {
 
@@ -55,7 +57,7 @@ class StudentDao(private val dataSource: DataSource) {
         return if (rs.next()) {
             Student(
                 rs.getLong("sid"), rs.getString("full_name"),
-                Group(rs.getLong("gid"), rs.getString("number"), rs.getInt("students_count"))
+                ActualGroup(rs.getLong("gid"), rs.getString("number"), rs.getInt("students_count"))
             )
         } else {
             null
@@ -69,4 +71,23 @@ class StudentDao(private val dataSource: DataSource) {
         stmt.setLong(3, student.id!!)
         stmt.executeUpdate()
     }
+
+    fun getStudents(page: Page): List<Student> {
+        val theQuery = "SELECT id, full_name, student_group FROM students ORDER BY full_name LIMIT ? OFFSET ?"
+        val conn = dataSource.connection
+        val stmt = conn.prepareStatement(theQuery)
+        stmt.setInt(1, page.size)
+        stmt.setInt(2, page.size * page.num)
+
+        val res = ArrayList<Student>()
+        val rs = stmt.executeQuery()
+        while (rs.next()) {
+            res.add(Student(
+                rs.getLong("id"), rs.getString("full_name"),
+                GroupProxy(conn, rs.getLong("student_group"))
+            ))
+        }
+        return res
+    }
+
 }
