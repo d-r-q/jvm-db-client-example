@@ -17,10 +17,10 @@ class UnivDataSource(private val delegate: DataSource) : DataSource by delegate 
     }
 
     override fun getConnection(): Connection {
-        return conn.get()
+        return conn.get() ?: delegate.connection
     }
 
     override fun getConnection(username: String?, password: String?): Connection {
-        return conn.get()
+        return conn.get() ?: delegate.getConnection(username, password)
     }
 }

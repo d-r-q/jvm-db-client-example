@@ -33,22 +33,15 @@ class Service(
     }
 
     fun getGroupByNumber(groupNumber: String): Group? {
-        return transaction(dataSource) {
-            groupDao.getGroupByNumber(groupNumber)
-        }
-
+        return groupDao.getGroupByNumber(groupNumber)
     }
 
     fun createGroup(group: Group): Long {
-        return transaction(dataSource) {
-            groupDao.createGroup(group)
-        }
+        return groupDao.createGroup(group)
     }
 
     fun findStudent(id: Long): Student? {
-        return transaction(dataSource) {
-            studentDao.findStudent(id)
-        }
+        return studentDao.findStudent(id)
     }
 
     fun move(toMove: Student, targetGroup: Group) {
@@ -62,11 +55,8 @@ class Service(
     }
 
     fun getStudents(page: Page): List<Student> {
-        return transaction(dataSource) {
-            val res = studentDao.getStudents(page)
-            res.map { it.group.number }.forEach({})
-            res
-        }
+        val res = studentDao.getStudents(page)
+        return res.map { it.group.number; it }
     }
 }
 
